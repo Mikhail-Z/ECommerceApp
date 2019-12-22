@@ -6,6 +6,7 @@ namespace ECommerceApp.DomainModel
 	public class Payment : EntityBase
 	{
 		private Order _order;
+		private PaymentStage _paymentStage;
 
 		public Payment(Order order)
 		{
@@ -32,16 +33,19 @@ namespace ECommerceApp.DomainModel
 
 		public PaymentStage PaymentStage
 		{
-			get;
-			private set;
-		}
-
-		public void UpdatePaymentStage()
-		{
-			if (PaymentStage == PaymentStage.FinishedSuccessFully ||
-				PaymentStage == PaymentStage.Failed)
+			get
 			{
-				PaymentStage++;
+				return _paymentStage;
+			}
+			set
+			{
+				if (_paymentStage >= value || _paymentStage + 1 != value)
+				{
+					throw new ArgumentException();
+				}
+
+				_paymentStage = value;
+				
 			}
 		}
 	}

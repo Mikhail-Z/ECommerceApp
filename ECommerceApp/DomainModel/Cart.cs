@@ -7,16 +7,17 @@ namespace ECommerceApp.DomainModel
 {
 	public class Cart : EntityBase
 	{
-		private ICollection<CartItem> _cartItems;
+		private ICollection<ProductBase> _cartItems;
+
 		private Customer _customer;
 
 		public Cart(Customer customer)
 		{
-			_cartItems = new List<CartItem>();
+			_cartItems = new List<ProductBase>();
 			Customer = customer;
 		}
 
-		public IReadOnlyCollection<CartItem> CartItems
+		public IReadOnlyCollection<ProductBase> Products
 		{
 			get
 			{
@@ -24,24 +25,24 @@ namespace ECommerceApp.DomainModel
 			}
 		}
 
-		public void AddCartItem(CartItem cartItem)
+		public void Add(ProductBase product)
 		{
-			if (FieldValidationService.ValidateNotNull(cartItem) == false || _cartItems.Contains(cartItem))
+			if (FieldValidationService.ValidateNotNull(product) == false || _cartItems.Contains(product))
 			{
 				throw new ArgumentException();
 			}
 
-			_cartItems.Add(cartItem);
+			_cartItems.Add(product);
 		}
 
-		public bool RemoveCartItem(CartItem cartItem)
+		public bool RemoveRoduct(ProductBase product)
 		{
-			if (FieldValidationService.ValidateNotNull(cartItem) == false)
+			if (FieldValidationService.ValidateNotNull(product) == false)
 			{
 				throw new ArgumentException();
 			}
 
-			return _cartItems.Remove(cartItem);
+			return _cartItems.Remove(product);
 		}
 
 		public Customer Customer

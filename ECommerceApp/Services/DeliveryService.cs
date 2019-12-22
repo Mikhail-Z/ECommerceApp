@@ -7,24 +7,7 @@ namespace ECommerceApp.Services
 {
 	public static class DeliveryService
 	{
-		private static IReadOnlyList<Delivery> _allDeliveryPoints;
-
-		static DeliveryService()
-		{
-			_allDeliveryPoints = new List<Delivery>();
-		}
-
-		public static IReadOnlyList<Delivery> GetDeliveryPoints(string city)
-		{
-			return _allDeliveryPoints;
-		}
-
-		public static IReadOnlyList<Delivery> GetDeliveryPoints(string city, DeliveryType deliveryType)
-		{
-			return _allDeliveryPoints;
-		}
-
-		public static decimal CalculateDeliveryCost(Customer customer, IReadOnlyCollection<CartItem> cartItems)
+		public static decimal CalculateDeliveryCost(Customer customer, IReadOnlyCollection<ProductBase> products, DeliveryPoint deliveryPoint)
 		{
 			//TODO логика
 			return new decimal(99);

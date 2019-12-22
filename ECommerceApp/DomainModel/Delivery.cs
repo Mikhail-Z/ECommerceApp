@@ -1,25 +1,35 @@
 ﻿using ECommerceApp.Services;
 using System;
+using System.Collections.Generic;
 
 namespace ECommerceApp.DomainModel
 {
 	public class Delivery : EntityBase
 	{
-		private string _address;
+		private DeliveryPoint _deliveryPoint;
 		private decimal _deliveryCost;
 		private DateTime _deliveryDate;
 
 		public Delivery(
-			string address,
+			DeliveryPoint deliveryPoint,
 			decimal deliveryCost,
 			DateTime deliveryDate,
 			DeliveryType deliveryType)
 		{
 			DeliveryType = deliveryType;
 			IsFinished = false;
-			Address = address;
+			DeliveryPoint = deliveryPoint;
 			PlannedDeliveryDate = deliveryDate;
 			DeliveryCost = deliveryCost;
+		}
+
+		public static IList<DeliveryPoint> GetDeliveryPoints()
+		{
+			return new List<DeliveryPoint> 
+			{
+				new DeliveryPoint("Рязань, Рязанская обл., г. Рязань, ул. Новоселов, д. 49"),
+				new DeliveryPoint("Рязань, Рязанская обл., г. Рязань, ул. Ленина, д. 50") 
+			};
 		}
 
 		public decimal DeliveryCost
@@ -67,20 +77,20 @@ namespace ECommerceApp.DomainModel
 			private set;
 		}
 
-		public string Address
+		public DeliveryPoint DeliveryPoint
 		{
 			get
 			{
-				return _address;
+				return _deliveryPoint;
 			}
 			private set
 			{
-				if (FieldValidationService.ValidateString(value) == false)
+				if (FieldValidationService.ValidateNotNull(value) == false)
 				{
 					throw new ArgumentException();
 				}
 
-				_address = value;
+				_deliveryPoint = value;
 			}
 		}
 

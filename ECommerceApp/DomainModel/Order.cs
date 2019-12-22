@@ -18,9 +18,14 @@ namespace ECommerceApp.DomainModel
 			Cart = cart;
 			PaymentType = paymentType;
 			Delivery = delivery;
-			TotalPrice = DiscountService.CalculatePriceWithDiscount(cart.Customer, cart.CartItems) 
-				+ delivery.DeliveryCost;
 			_orderStage = OrderStage.SuccessfullyMade;
+			TotalPrice = CalculateTotalPrice();
+		}
+
+		private decimal CalculateTotalPrice()
+		{
+			return DicsountService.CalculatePriceWithDiscount(Cart.Customer, Cart.Products, PaymentType)
+				+ Delivery.DeliveryCost;
 		}
 
 		public Cart Cart
@@ -79,24 +84,30 @@ namespace ECommerceApp.DomainModel
 			}
 		}
 
-		public void UpdateOrderStage()
+		public OrderStage OrderStage
 		{
-			if (_orderStage == OrderStage.Cancelled || _orderStage == OrderStage.Issued)
+			get
 			{
-				throw new ArgumentException();
+				return _orderStage;
 			}
-
-			_orderStage++;
-		}
-
-		public void CancelOrder()
-		{
-			if (_orderStage == OrderStage.Cancelled || _orderStage == OrderStage.Issued)
+			set
 			{
-				throw new ArgumentException();
-			}
+				if (value == OrderStage.Cancelled)
+				{
+					if (_orderStage == OrderStage.Issued)
+					{
+						throw new ArgumentException();
+					}
 
-			_orderStage = OrderStage.Cancelled;
+					_orderStage = value;
+				}
+				else if (_orderStage <= value || _orderStage + 1 != value)
+				{
+					throw new ArgumentException();
+				}
+
+				_orderStage = value;
+			}
 		}
 	}
 }

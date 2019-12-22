@@ -47,19 +47,24 @@ Microsoft BizTalk, TIBCO, WebMethods, SeeBeyond, Vitria и др.", "978-5-907144
 				2019, new decimal(2829), DateTime.Now,
 				computerTechnologiesProductCategory, true);
 			Cart cart = new Cart(customer);
-			CartItem cartItem = new CartItem(book, 1);
-			cart.AddCartItem(cartItem);
+			cart.Add(book);
+			cart.Add(book);
+			var deliveryPoint = new DeliveryPoint("г. Рязань, ул. Новоселов, д. 49");
+			var deliveryCost = DeliveryService.CalculateDeliveryCost(customer, cart.Products, deliveryPoint);
 			Delivery delivery = new Delivery(
-				"г. Рязань, ул. Новоселов, д. 49",
-				DeliveryService.CalculateDeliveryCost(customer, cart.CartItems),
-				new DateTime(2019, 11, 26), DeliveryType.PointOfIssue);
+				deliveryPoint,
+				deliveryCost,
+				new DateTime(2019, 11, 26), 
+				DeliveryType.PointOfIssue);
 			Order order = new Order(cart, PaymentType.Cash, delivery);
 			customer.UpdatePersonalData("Иван", "Иванов", Sex.Male, null);
-			
-			Console.WriteLine(order.Cart.Customer.FirstName == customer.FirstName);
-
 			Payment payment = new Payment(order);
-			PaymentService.MakePayment(payment);
+			//Через некоторое время после успешного взаимодействия со сторонними сервисами по оплате
+			order.OrderStage = OrderStage.SuccessfullyMade;
+			order.OrderStage = OrderStage.Packaging;
+			order.OrderStage = OrderStage.DeliveredToDeliveryPoint;
+			order.OrderStage = OrderStage.ReadyForDelivery;
+			order.OrderStage = OrderStage.Issued;
 		}
 	}
 }
